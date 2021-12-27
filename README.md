@@ -1,5 +1,5 @@
-# artillery-engine-socketio-v2
-Socket.IO v2 engine for Artillery
+# artillery-engine-socketio-v2.4
+Socket.IO v2.4 engine for Artillery
 
 ## Disclaimer
 The default socket.io engine does not timeout the `acknowledge` which I am using it as RPC function. So, I have to create our own engine to support the requirement.
@@ -18,10 +18,10 @@ When the result does not match, we just get error like `Failed match` which some
 Install with npm
 
 ```
-npm install -D artillery-engine-socketio-v2
+npm install -D artillery-engine-socketio-v2.4
 ```
 
-Enable the `socketio-v2` engine by listing it in `config.engines`. Ex:
+Enable the `socketio-v2.4` engine by listing it in `config.engines`. Ex:
 
 ```yml
 config:
@@ -30,14 +30,14 @@ config:
     - duration: 30
       arrivalRate: 5
   engines:
-   socketio-v2: {}
+   socketio-v2.4: {}
 ```
 
-In each scenario you must list the engine `socketio-v2` as well. Ex:
+In each scenario you must list the engine `socketio-v2.4` as well. Ex:
 ```yml
 scenarios:
   - name: My first scenario
-    engine: socketio-v2
+    engine: socketio-v2.4
     flow:
       - emit:
           channel: "echo"
