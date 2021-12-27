@@ -143,6 +143,7 @@ function processResponse (ee, data, response, context, callback) {
 
 SocketIoEngineV2.prototype.step = function (requestSpec, ee) {
   let self = this;
+  console.log("========step")
 
   if (requestSpec.loop) {
     let steps = _.map(requestSpec.loop, function (rs) {
@@ -166,6 +167,7 @@ SocketIoEngineV2.prototype.step = function (requestSpec, ee) {
   }
 
   let f = function (context, callback) {
+    console.log("=======requestSpec::::", requestSpec)
     // Only process emit requests; delegate the rest to the HTTP engine (or think utility)
     if (requestSpec.think) {
       return engineUtil.createThink(requestSpec, _.get(self.config, 'defaults.think', {}));
@@ -192,6 +194,8 @@ SocketIoEngineV2.prototype.step = function (requestSpec, ee) {
       channel: template(requestSpec.emit.channel, context),
       data: template(requestSpec.emit.data, context)
     };
+
+    console.log("=======outgoing::::", outgoing)
 
     let endCallback = function (err, context, needEmit) {
       if (err) {
@@ -290,6 +294,7 @@ SocketIoEngineV2.prototype.step = function (requestSpec, ee) {
     requestSpec.emit.namespace = template(requestSpec.emit.namespace, context) || '';
 
     self.loadContextSocket(requestSpec.emit.namespace, context, function (err, socket) {
+      console.log("end context....", err)
       if (err) {
         debug(err);
         ee.emit('error', err.message);
@@ -310,6 +315,7 @@ SocketIoEngineV2.prototype.step = function (requestSpec, ee) {
 SocketIoEngineV2.prototype.loadContextSocket = function (namespace, context, cb) {
   context.sockets = context.sockets || {};
 
+  console.log("======loadContextSocket:", namespace)
   if (!context.sockets[namespace]) {
     let target = this.config.target + namespace;
     let tls = this.config.tls || {};
@@ -325,14 +331,18 @@ SocketIoEngineV2.prototype.loadContextSocket = function (namespace, context, cb)
     context.sockets[namespace] = socket;
     wildcardPatch(socket);
 
+    console.log("----socket", options)
     socket.on('*', function () {
+      console.log("++++new event!")
       context.__receivedMessageCount++;
     });
 
-    socket.once('connect', function () {
+    socket.on('connection', function () {
+      console.log("++++Connected")
       cb(null, socket);
     });
-    socket.once('connect_error', function (err) {
+    socket.on('connect_error', function (err) {
+      console.log("++++errror")
       cb(err, null);
     });
   } else {
@@ -355,7 +365,7 @@ SocketIoEngineV2.prototype.closeContextSockets = function (context) {
 SocketIoEngineV2.prototype.compile = function (tasks, scenarioSpec, ee) {
   let config = this.config;
   let self = this;
-
+  console.log("compile", tasks, scenarioSpec)
   function zero (callback, context) {
     context.__receivedMessageCount = 0;
     ee.emit('started');
