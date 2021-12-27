@@ -1,6 +1,6 @@
 {
   "name": "artillery-engine-socketio-v2.4",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Socket.IO v2.4 engine for Artillery",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,7 @@
     "debug": "^4.3.1",
     "deep-equal": "^1.0.1",
     "lodash": "^4.17.20",
-    "socket.io-client": "^2.1.0",
+    "socket.io-client": "^2.4.0",
     "socketio-wildcard": "^2.0.0"
   },
   "devDependencies": {},
